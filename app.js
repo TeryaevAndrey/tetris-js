@@ -43,7 +43,7 @@ const drawGrid = () => {
 const fallingFigures = [];
 fallingFigures[0] = {
   y: 0,
-  elIndex: Math.round(Math.random() * (3 - 0) + 0)
+  elIndex: Math.round(Math.random() * (3 - 0) + 0),
 };
 
 const draw = () => {
@@ -52,28 +52,34 @@ const draw = () => {
   drawGrid();
 
   fallingFigures.forEach((figure) => {
-    figures[figure.elIndex].forEach(
-      (row, rowIndex) => {
-        row.forEach((column, columnIndex) => {
-          if (column === 1) {
-            ctx.beginPath();
-            ctx.strokeStyle = "#fff";
-            ctx.lineWidth = 4;
-            ctx.fillStyle = "green";
-            ctx.rect(
-              cellSize * columnIndex,
-              cellSize * rowIndex + figure.y,
-              cellSize,
-              cellSize
-            );
-            ctx.fill();
-            ctx.stroke();
-          }
-        });
-      }
-    );
-      figure.y += 70;
+    figures[figure.elIndex].forEach((row, rowIndex) => {
+      row.forEach((column, columnIndex) => {
+        if (column === 1) {
+          ctx.beginPath();
+          ctx.strokeStyle = "#fff";
+          ctx.lineWidth = 4;
+          ctx.fillStyle = "green";
+          ctx.rect(
+            cellSize * columnIndex,
+            cellSize * rowIndex + figure.y,
+            cellSize,
+            cellSize
+          );
+          ctx.fill();
+          ctx.stroke();
+        }
+      });
+    });
+    figure.y += 70;
   });
 };
 
-setInterval(draw, 500);
+setInterval(draw, 200);
+
+cvs.addEventListener("click", () => {
+  figures[fallingFigures[0].elIndex] = figures[
+    fallingFigures[0].elIndex
+  ][0].map((val, index) =>
+    figures[fallingFigures[0].elIndex].map((row) => row[index]).reverse()
+  );
+});
