@@ -102,17 +102,21 @@ const draw = () => {
   const figureWidth = figures[figure.el][0].length * cellSize;
   const figureHeight = figures[figure.el].length * cellSize;
 
-  if (direction === "left" && figure.x >= figureWidth) {
+  if (direction === "left" && figure.x > figureWidth) {
     figure.x -= figureWidth;
     direction = undefined;
-  } else if (direction === "left" && figure.x <= figureWidth) {
+  } else if (direction === "left") {
     figure.x = 0;
     direction = undefined;
   }
-  if (direction === "right" && figure.x <= figureWidth) {
+  if (
+    direction === "right" &&
+    figure.x !== gridWidth - figureWidth &&
+    figure.x + figureWidth * 2 < gridWidth
+  ) {
     figure.x += figureWidth;
     direction = undefined;
-  } else if (direction === "right" && figure.x >= figureWidth) {
+  } else if (direction === "right") {
     figure.x = gridWidth - figureWidth;
     direction = undefined;
   }
