@@ -8,17 +8,12 @@ const figures = [
   [
     [0, 1, 0],
     [1, 1, 1],
-    [0, 0, 0],
   ],
+  [[1, 1, 1, 1]],
   [
-    [0, 0, 0, 0],
-    [1, 1, 1, 1],
-    [0, 0, 0, 0],
-  ],
-  [
-    [0, 0, 1],
-    [0, 0, 1],
-    [0, 1, 1],
+    [0, 1],
+    [0, 1],
+    [1, 1],
   ],
   [
     [1, 1],
@@ -27,6 +22,19 @@ const figures = [
 ];
 
 let fallingFigures = [];
+let cells = [];
+
+for (let i = 0; i < 15; i++) {
+  cells.push([]);
+}
+
+for (let i = 0; i < 9; i++) {
+  for (let j = 0; j < cells.length; j++) {
+    cells[j].push(0);
+  }
+}
+
+console.log(cells);
 
 fallingFigures[0] = {
   x: Math.round(Math.random() * (4 - 0) + 0) * cellSize,
@@ -95,7 +103,6 @@ const draw = () => {
         }
       });
     });
-    figure.y += cellSize;
   });
 
   const figure = fallingFigures[0];
@@ -120,9 +127,36 @@ const draw = () => {
     figure.x = gridWidth - figureWidth;
     direction = undefined;
   }
+
+  if (figure.y === gridHeight - figureHeight) {
+    figure.y = figure.y;
+
+    const cellsX = figure.x / cellSize - 1;
+    const cellsY = figure.y / cellSize + figureHeight / cellSize;
+    const cellsFigure = figureWidth / cellSize;
+    const cellsYByFigure = figure.y / cellSize;
+
+    console.log(cellsYByFigure);
+
+    for (let i = 0; i < cells[cellsY - 1].length; i++) {
+      if (i > cellsX && i <= cellsFigure + cellsX) {
+        cells[cellsY - 1][i] = 1;
+      }
+    }
+
+    for (let i = 0; i < cells.length; i++) {
+      if (i > cellsYByFigure - 1) {
+        cells[i][cellsX + 1] = 1;
+      }
+    }
+  } else {
+    figure.y += cellSize;
+  }
 };
 
-setInterval(draw, 200);
+console.log(cells);
+
+setInterval(draw, 170);
 
 document.addEventListener("keydown", getDirection);
 
