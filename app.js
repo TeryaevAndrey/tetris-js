@@ -136,17 +136,17 @@ const draw = () => {
     const cellsFigure = figureWidth / cellSize;
     const cellsYByFigure = figure.y / cellSize;
 
-    console.log(cellsYByFigure);
-
-    for (let i = 0; i < cells[cellsY - 1].length; i++) {
-      if (i > cellsX && i <= cellsFigure + cellsX) {
-        cells[cellsY - 1][i] = 1;
-      }
-    }
-
-    for (let i = 0; i < cells.length; i++) {
-      if (i > cellsYByFigure - 1) {
-        cells[i][cellsX + 1] = 1;
+    for (let rowIndex = 0; rowIndex < figures[figure.el].length; rowIndex++) {
+      for (
+        let colIndex = 0;
+        colIndex < figures[figure.el][rowIndex].length;
+        colIndex++
+      ) {
+        if (figures[figure.el][rowIndex][colIndex] === 1) {
+          const cellRow = Math.floor(figure.y / cellSize) + rowIndex;
+          const cellCol = Math.floor(figure.x / cellSize) + colIndex;
+          cells[cellRow][cellCol] = 1;
+        }
       }
     }
   } else {
