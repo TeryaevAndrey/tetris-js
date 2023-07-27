@@ -34,8 +34,6 @@ for (let i = 0; i < 9; i++) {
   }
 }
 
-console.log(cells);
-
 fallingFigures[0] = {
   x: Math.round(Math.random() * (4 - 0) + 0) * cellSize,
   y: 0,
@@ -43,8 +41,6 @@ fallingFigures[0] = {
 };
 
 let direction = undefined;
-
-console.log(figures[fallingFigures[0].el]);
 
 const getDirection = (e) => {
   if (e.key === "ArrowLeft") {
@@ -128,14 +124,22 @@ const draw = () => {
     direction = undefined;
   }
 
-  if (figure.y === gridHeight - figureHeight) {
-    figure.y = figure.y;
+  const cellX = Math.floor(figure.x / cellSize);
+  const cellY = Math.floor(figure.y / cellSize);
 
-    const cellsX = figure.x / cellSize - 1;
-    const cellsY = figure.y / cellSize + figureHeight / cellSize;
-    const cellsFigure = figureWidth / cellSize;
-    const cellsYByFigure = figure.y / cellSize;
-
+  if (
+    cellY + figures[figure.el].length >= cells.length ||
+    figures[figure.el].some((row, rowIndex) =>
+      row.some((column, colIndex) => {
+        const cellRow = cellY + rowIndex + 1;
+        const cellCol = cellX + colIndex;
+        return (
+          column === 1 &&
+          (cellRow >= cells.length || cells[cellRow][cellCol] === 1)
+        );
+      })
+    )
+  ) {
     for (let rowIndex = 0; rowIndex < figures[figure.el].length; rowIndex++) {
       for (
         let colIndex = 0;
@@ -149,12 +153,16 @@ const draw = () => {
         }
       }
     }
+
+    fallingFigures.unshift({
+      x: Math.round(Math.random() * (4 - 0) + 0) * cellSize,
+      y: 0,
+      el: Math.round(Math.random() * (figures.length - 1 - 0) + 0),
+    });
   } else {
     figure.y += cellSize;
   }
 };
-
-console.log(cells);
 
 setInterval(draw, 170);
 
