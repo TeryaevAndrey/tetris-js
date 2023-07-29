@@ -37,7 +37,7 @@ for (let i = 0; i < 9; i++) {
 fallingFigures[0] = {
   x: Math.round(Math.random() * (4 - 0) + 0) * cellSize,
   y: 0,
-  el: Math.round(Math.random() * (figures.length - 1 - 0) + 0),
+  el: figures[Math.round(Math.random() * (figures.length - 1 - 0) + 0)],
 };
 
 let direction = undefined;
@@ -81,7 +81,7 @@ const draw = () => {
   drawGrid();
 
   fallingFigures.forEach((figure) => {
-    figures[figure.el].forEach((row, rowIndex) => {
+    figure.el.forEach((row, rowIndex) => {
       row.forEach((column, columnIndex) => {
         if (column === 1) {
           ctx.beginPath();
@@ -102,25 +102,15 @@ const draw = () => {
   });
 
   const figure = fallingFigures[0];
-  const figureWidth = figures[figure.el][0].length * cellSize;
-  const figureHeight = figures[figure.el].length * cellSize;
+  const figureWidth = fallingFigures[0].el.length * cellSize;
+  const figureHeight = fallingFigures[0].el.length * cellSize;
 
-  if (direction === "left" && figure.x > figureWidth) {
-    figure.x -= figureWidth;
-    direction = undefined;
-  } else if (direction === "left") {
-    figure.x = 0;
+  if (direction === "left" && figure.x >= 1) {
+    figure.x -= cellSize;
     direction = undefined;
   }
-  if (
-    direction === "right" &&
-    figure.x !== gridWidth - figureWidth &&
-    figure.x + figureWidth * 2 < gridWidth
-  ) {
-    figure.x += figureWidth;
-    direction = undefined;
-  } else if (direction === "right") {
-    figure.x = gridWidth - figureWidth;
+  if (direction === "right" && figure.x + figureWidth < gridWidth) {
+    figure.x += cellSize;
     direction = undefined;
   }
 
@@ -128,8 +118,8 @@ const draw = () => {
   const cellY = Math.floor(figure.y / cellSize);
 
   if (
-    cellY + figures[figure.el].length >= cells.length ||
-    figures[figure.el].some((row, rowIndex) =>
+    cellY + fallingFigures[0].el.length >= cells.length ||
+    fallingFigures[0].el.some((row, rowIndex) =>
       row.some((column, colIndex) => {
         const cellRow = cellY + rowIndex + 1;
         const cellCol = cellX + colIndex;
@@ -140,13 +130,13 @@ const draw = () => {
       })
     )
   ) {
-    for (let rowIndex = 0; rowIndex < figures[figure.el].length; rowIndex++) {
+    for (let rowIndex = 0; rowIndex < fallingFigures[0].el.length; rowIndex++) {
       for (
         let colIndex = 0;
-        colIndex < figures[figure.el][rowIndex].length;
+        colIndex < fallingFigures[0].el[rowIndex].length;
         colIndex++
       ) {
-        if (figures[figure.el][rowIndex][colIndex] === 1) {
+        if (fallingFigures[0].el[rowIndex][colIndex] === 1) {
           const cellRow = Math.floor(figure.y / cellSize) + rowIndex;
           const cellCol = Math.floor(figure.x / cellSize) + colIndex;
           cells[cellRow][cellCol] = 1;
@@ -157,7 +147,7 @@ const draw = () => {
     fallingFigures.unshift({
       x: Math.round(Math.random() * (4 - 0) + 0) * cellSize,
       y: 0,
-      el: Math.round(Math.random() * (figures.length - 1 - 0) + 0),
+      el: figures[Math.round(Math.random() * (figures.length - 1 - 0) + 0)],
     });
   } else {
     figure.y += cellSize;
@@ -170,9 +160,8 @@ document.addEventListener("keydown", getDirection);
 
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
-    figures[fallingFigures[0].el] = figures[fallingFigures[0].el][0].map(
-      (val, index) =>
-        figures[fallingFigures[0].el].map((row) => row[index]).reverse()
+    fallingFigures[0].el = fallingFigures[0].el[0].map((val, index) =>
+      fallingFigures[0].el.map((row) => row[index]).reverse()
     );
   }
 });
